@@ -2,20 +2,21 @@
 using namespace std;
 // https://leetcode.com/problems/gas-station/description/
 int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+    int tgas=0,cgas=0,st=0;
     int n=gas.size();
-    bool nc=0;
-    for(int i=0;i<2n;i++){
-        if(st==i%n){
-            return st;
+    for(int i=0;i<n;i++){
+        cgas+=gas[i]-cost[i];
+        tgas+=gas[i]-cost[i];
+
+        if(cgas<0){
+            cgas=0;
+            st=i+1;
         }
-        tgas+=gas[i%n];
-        if(tgas<cost[i%n]){
-            tgas=0;
-            st=(i%n)+1;
-            continue;
-        }
-        tgas-=cost[i%n];
     }
+    if(tgas<0){
+        return -1;
+    }
+    return st;
 }
 int main(){
 
