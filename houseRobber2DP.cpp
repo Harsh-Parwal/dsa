@@ -1,36 +1,25 @@
 #include<bits/stdc++.h>
 using namespace std;
-int maxMoneyRobAdj(vector<int>& houses,int idx,vector<int>& dp){
-    if(idx==0){
-        return houses[idx];
-    }
-    if(idx<0){
+int robMoney(vector<int>& nums,int idx,int n,vector<int>& dp){
+    if(idx>=n){
         return 0;
     }
     if(dp[idx]!=-1){
         return dp[idx];
     }
-    int pick=houses[idx]+maxMoneyRobAdj(houses,idx-2,dp);
-    int noPick=0+maxMoneyRobAdj(houses,idx-1,dp);
-    return dp[idx]=max(pick,noPick);
+    int notake=robMoney(nums,idx+1,n,dp);
+    int take=nums[idx]+robMoney(nums,idx+2,n,dp);
+    return dp[idx]=max(notake,take);
 }
-int maxMoneyRobCircular(vector<int>& houses){
-    int n=houses.size();
+int rob(vector<int>& nums){
+    int n=nums.size();
     if(n==1){
-        return houses[0];
+        return nums[0];
     }
-    vector<int> temp1,temp2;
-    for(int i=0;i<n;i++){
-        if(i!=0){
-            temp1.push_back(houses[i]);
-        }
-        if(i!=n-1){
-            temp2.push_back(houses[i]);
-        }
-    }
-    vector<int> dp1(temp1.size(),-1);
-    vector<int> dp2(temp2.size(),-1);
-    return max(maxMoneyRobAdj(temp1,temp1.size()-1,dp1),maxMoneyRobAdj(temp2,temp2.size()-1,dp2));
+
+    vector<int>dp(n,-1);
+    vector<int>dp2(n,-1);
+    return max(robMoney(nums,0,n-1,dp),robMoney(nums,1,n,dp));
 }
 int main(){
 
